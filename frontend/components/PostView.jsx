@@ -5,10 +5,10 @@ export default function PostView({ post }) {
         {post.id}
       </div>
       <div>
-        {post.body}
+        {post.author}
       </div>
       <div>
-        {post.userId}
+        {post.body}
       </div>
     </div>
   )
