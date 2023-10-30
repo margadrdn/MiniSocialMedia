@@ -4,18 +4,19 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type post struct {
-	Id     int    `json:"id"`
+	Id     string `json:"id"`
+	Author string `json:"author"`
 	Body   string `json:"body"`
-	UserId int    `json:"userId"`
 }
 
 var posts = []post{
-	{Id: 1, Body: "Dolore aliquip ipsum ullamco enim Lorem pariatur fugiat eu fugiat.", UserId: 1},
-	{Id: 2, Body: "Sit duis laboris ut laboris fugiat enim est qui amet.", UserId: 1},
-	{Id: 3, Body: "Sint dolore mollit officia eu reprehenderit est minim.", UserId: 2},
+	{Id: uuid.NewString(), Author: "margad", Body: "Dolore aliquip ipsum ullamco enim Lorem pariatur fugiat eu fugiat."},
+	{Id: uuid.NewString(), Author: "catperson", Body: "Sit duis laboris ut laboris fugiat enim est qui amet."},
+	{Id: uuid.NewString(), Author: "spider-man", Body: "Sint dolore mollit officia eu reprehenderit est minim."},
 }
 
 func getPosts(c *gin.Context) {
