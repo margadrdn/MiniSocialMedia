@@ -9,7 +9,7 @@ import (
 type post struct {
 	Id     int    `json:"id"`
 	Body   string `json:"body"`
-	UserId int    `json:"user-id"`
+	UserId int    `json:"userId"`
 }
 
 var posts = []post{
