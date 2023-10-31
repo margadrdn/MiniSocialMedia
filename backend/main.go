@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -53,11 +52,20 @@ func main() {
 		}
 	}()
 
-	// Send a ping to confirm a successful connection
-	if err := client.Database("admin").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Err(); err != nil {
+	coll := client.Database("minisocialmedia").Collection("posts")
+	filter := bson.D{{"author", "spider_man"}}
+
+	cursor, err := coll.Find(context.TODO(), filter)
+	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
+	// end find
+
+	var results []post
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		panic(err)
+	}
+	posts = results
 
 	router := gin.Default()
 	router.GET("/posts", getPosts)
