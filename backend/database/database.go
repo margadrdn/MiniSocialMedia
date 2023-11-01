@@ -30,10 +30,12 @@ func Disconnect(client *mongo.Client) (err error) {
 
 func GetPosts(client *mongo.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
-		coll := client.Database("minisocialmedia").Collection("posts")
-		filter := bson.D{{"author", "spider_man"}}
+		collection := client.Database("minisocialmedia").Collection("posts")
 
-		cursor, err := coll.Find(context.TODO(), filter)
+		sort := bson.D{{"CreatedAt", -1}}
+		var limit int64 = 10
+
+		cursor, err := collection.Find(context.TODO(), bson.D{}, options.Find().SetSort(sort).SetLimit(limit))
 		if err != nil {
 			panic(err)
 		}
