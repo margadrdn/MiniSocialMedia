@@ -1,13 +1,12 @@
 export default function PostView({ post }) {
   return (
-    <div className="w-1/2 bg-indigo-100 p-4 mx-auto m-4">
-      <div>
-        {post.id}
+    <div className="bg-green-200 p-4 m-4 rounded-lg max-w-prose">
+      <div className="flex gap-4">
+        <div className="font-semibold">
+          @{post.author}
+        </div>
       </div>
-      <div>
-        {post.author}
-      </div>
-      <div>
+      <div className="block">
         {post.body}
       </div>
     </div>

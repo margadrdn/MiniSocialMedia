@@ -49,3 +49,24 @@ func GetPosts(client *mongo.Client) func(*gin.Context) {
 		c.IndentedJSON(http.StatusOK, results)
 	}
 }
+
+func CreatePost(client *mongo.Client) func(*gin.Context) {
+	return func(c *gin.Context) {
+		var newPost model.Post
+
+		if err := c.BindJSON(&newPost); err != nil {
+			return
+		}
+
+		collection := client.Database("minisocialmedia").Collection("posts")
+
+		result, err := collection.InsertOne(context.TODO(), newPost)
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{
+				"error": "error",
+			})
+		}
+
+		c.IndentedJSON(http.StatusCreated, result)
+	}
+}
