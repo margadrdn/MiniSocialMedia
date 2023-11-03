@@ -16,9 +16,9 @@ func GetEnvVar(varName string) (val string, err error) {
 	if err = godotenv.Load(); err != nil {
 		return
 	}
-	val = os.Getenv("MONGODB_URI")
+	val = os.Getenv(varName)
 	if val == "" {
-		err = errors.New("Environment variable not set correctly.")
+		err = errors.New("environment variable not set correctly")
 		return
 	}
 	return

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"minisocialmedia/authentication"
 	"minisocialmedia/database"
 	"minisocialmedia/environment"
 	"net/http"
@@ -42,5 +43,7 @@ func main() {
 	})
 	router.GET("/posts", database.GetPosts(client))
 	router.POST("/posts", database.CreatePost(client))
+	router.POST("/user/signin", authentication.SigninUser(client))
+	router.POST("/user/signup", authentication.SignupUser(client))
 	router.Run("localhost:8080")
 }

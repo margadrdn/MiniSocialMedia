@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"minisocialmedia/model"
+	"minisocialmedia/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +41,7 @@ func GetPosts(client *mongo.Client) func(*gin.Context) {
 		}
 		// end find
 
-		var results []model.Post
+		var results []models.Post
 		if err = cursor.All(context.TODO(), &results); err != nil {
 			panic(err)
 		}
@@ -52,7 +52,7 @@ func GetPosts(client *mongo.Client) func(*gin.Context) {
 
 func CreatePost(client *mongo.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
-		var newPost model.Post
+		var newPost models.Post
 
 		if err := c.BindJSON(&newPost); err != nil {
 			return
