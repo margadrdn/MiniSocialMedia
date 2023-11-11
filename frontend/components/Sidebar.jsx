@@ -1,14 +1,13 @@
-import Link from "next/link";
+'use client'
 
-export default function Sidebar() {
+import useLogout from "@/hooks/useLogout"
+
+export default function Sidebar({ children }) {
+  const { logout } = useLogout()
   return (
-    <div className="">
-      <Link className="block bg-green-200 rounded-full p-2 m-2" href="/">
-        Home
-      </Link>
-      <Link className="block bg-green-200 rounded-full p-2 m-2" href="/messages">
-        Messages
-      </Link>
-    </div>
+    <>
+      <button onClick={logout}>Logout</button>
+      {children}
+    </>
   )
 }

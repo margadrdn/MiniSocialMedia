@@ -43,7 +43,7 @@ func main() {
 	})
 	router.GET("/posts", database.GetPosts(client))
 	router.POST("/posts", database.CreatePost(client))
-	router.POST("/user/signin", authentication.SigninUser(client))
-	router.POST("/user/signup", authentication.SignupUser(client))
+	router.POST("/auth/login", authentication.SigninUser(client)) // todo change function name
+	router.POST("/auth/signup", authentication.SignupUser(client))
 	router.Run("localhost:8080")
 }

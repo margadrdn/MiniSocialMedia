@@ -19,35 +19,42 @@ func SigninUser(client *mongo.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var user models.User
 		if err := c.BindJSON(&user); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": err,
-			})
+			c.JSON(http.StatusBadRequest, gin.H{"message": err})
+			return
 		}
 
 		collection := client.Database("minisocialmedia").Collection("users")
-		filter := bson.D{{"name", user.Name}}
+		filter := bson.D{{"username", user.Username}}
 
 		var databaseUser models.User
 
 		err := collection.FindOne(context.TODO(), filter).Decode(&databaseUser)
 		if err != nil {
+			fmt.Println(err)
+			fmt.Println("wrong username")
 			c.JSON(http.StatusBadRequest, gin.H{"message": "wrong username"})
 			return
 		}
 
 		err = bcrypt.CompareHashAndPassword([]byte(databaseUser.Password), []byte(user.Password))
 		if err != nil {
+			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "wrong password"})
 			return
 		}
 
-		token, err := createToken(databaseUser.Name)
+		token, err := createToken(databaseUser.Username)
 		if err != nil {
+			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": err})
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"token": token})
+		// c.SetCookie("username", databaseUser.Username, 3600*24*2, "/", "localhost", false, true)
+		c.JSON(http.StatusOK, gin.H{
+			"token":    token,
+			"username": databaseUser.Username,
+		})
 	}
 }
 
@@ -62,7 +69,7 @@ func SignupUser(client *mongo.Client) func(*gin.Context) {
 		}
 
 		collection := client.Database("minisocialmedia").Collection("users")
-		filter := bson.D{{"name", user.Name}}
+		filter := bson.D{{"username", user.Username}}
 		// var databaseUser models.User
 		count, _ := collection.CountDocuments(context.TODO(), filter)
 		if count == 0 {
@@ -82,14 +89,17 @@ func SignupUser(client *mongo.Client) func(*gin.Context) {
 					"message": err,
 				})
 			}
-			jwt, err := createToken(user.Name)
+			jwt, err := createToken(user.Username)
 			if err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{
 					"message": err.Error(),
 				})
 			}
 			if jwt != "" {
-				c.JSON(http.StatusCreated, jwt)
+				c.JSON(http.StatusCreated, gin.H{
+					"username": user.Username,
+					"token":    jwt,
+				})
 			}
 		} else if count != 0 {
 			c.JSON(http.StatusBadRequest, gin.H{

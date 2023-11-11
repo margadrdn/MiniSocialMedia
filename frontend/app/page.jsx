@@ -1,22 +1,12 @@
-import NewPostView from "@/components/NewPostView";
-import PostView from "@/components/PostView";
+import Sidebar from "@/components/Sidebar";
+import Posts from "@/components/post/Posts";
 
-export default async function Home() {
-  const posts = await getPosts()
-
+export default function Root() {
   return (
-    <div className="grow overflow-scroll">
-      <NewPostView />
-      {posts.map((post) => <PostView post={post} />)}
-    </div>
+    <>
+      <Sidebar>
+        <Posts />
+      </Sidebar>
+    </>
   )
-}
-
-async function getPosts() {
-  const res = await fetch("http://127.0.0.1:8080/posts", { next: {revalidate: 0 }})
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data')
-  }
-  return res.json()
 }
